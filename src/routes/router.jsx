@@ -5,6 +5,7 @@ import { HomePage } from '../pages';
 import AuthLayout from '../layouts/AuthLayout';
 import SigninPage from '../pages/SigninPage';
 import SignupPage from '../pages/SignupPage';
+import Detail from '../pages/Detail';
 
 // TODO : errorElement 추가하기
 // TODO : Path 상수화하기
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
         element: <Navigate to="/auth" replace />,
       },
     ],
+  },
+  {
+    path: '/detail',
+    element: <Detail />,
+    children: [],
   },
 ]);
 
