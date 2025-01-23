@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getPlaceByExplanationApi } from "../../apis/visitJejuApi";
-import Detail from "./components/Detail";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getPlaceByExplanationApi } from '../../apis/visitJejuApi';
+import Detail from './components/Detail';
 
 const DetailPage = () => {
-  const { contentsid } = useParams(); 
+  const { contentsid } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,15 +14,22 @@ const DetailPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiKey = import.meta.env.VITE_VISITJEJU_KEY; 
-        const response = await fetch(`https://api.visitjeju.net/vsjApi/contents/searchList?locale=kr&cid=${contentsid}&item=1&apiKey=${apiKey}`)
-          // `https://api.visitjeju.net/vsjApi/contents/searchList?locale=kr&cid=${contentsid}&item=1&apiKey=${apiKey}`
-          // getPlaceByExplanationApi(contentsid) // 에러 발생: Unexpected token '<', "<!doctype "... is not valid JSON
-        if (!response.ok) throw new Error("데이터를 가져오는 데 실패했습니다.");
-        let result = await response.json();
-        setData(result.items[0]); 
-      } catch (err) {
-        setError(err.message);
+        if (!contentsid) {
+          navigate('/search'); // cid가 없으면 즉시 리다이렉트
+          return;
+        }
+        const result = await getPlaceByExplanationApi(contentsid);
+
+        if (!result.items || result.items.length === 0) {
+          navigate('/search'); 
+          return;
+        }
+
+        setData(result.items[0]);
+      } catch (error) {
+        console.error("api 호출 중 오류 :", error);
+        setError(error.message);
+        navigate('/search'); // 에러시 리다이렉트
       } finally {
         setLoading(false);
       }
@@ -36,10 +44,10 @@ const DetailPage = () => {
 
   if (!data) return <div className="text-center mt-20">데이터가 없습니다.</div>;
 
-  console.log("DetailPage loaded");
+  console.log('DetailPage loaded');
   return (
     <div>
-      <Detail data={data}/>
+      <Detail data={data} />
     </div>
   );
 };
