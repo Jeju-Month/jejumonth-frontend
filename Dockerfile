@@ -1,4 +1,3 @@
-# 베이스 이미지 설정 (Node 18 LTS + Alpine)
 FROM node:18-alpine AS base
 
 # 빌드 시 환경 변수 설정
