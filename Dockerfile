@@ -92,7 +92,7 @@ RUN yarn build
 FROM nginx:stable-alpine AS runner
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=base /app/dist /usr/share/nginx/html/page
+COPY --from=base /app/dist /usr/share/nginx/html/
 
 EXPOSE 3000
 
