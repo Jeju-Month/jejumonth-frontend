@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 
 # 빌드 시 환경 변수 설정
 ARG VITE_SUPABASE_SERVICE_KEY
