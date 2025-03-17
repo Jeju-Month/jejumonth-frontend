@@ -63,7 +63,6 @@
 
 FROM node:22-alpine AS base
 
-# Define arguments for environment variables
 ARG VITE_SUPABASE_SERVICE_KEY
 ARG VITE_KAKAOMAP_KEY
 ARG VITE_VISITJEJU_KEY
@@ -75,7 +74,6 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Copy source code and set environment variables
 COPY . .
 ENV VITE_SUPABASE_SERVICE_KEY=$VITE_SUPABASE_SERVICE_KEY
 ENV VITE_KAKAOMAP_KEY=$VITE_KAKAOMAP_KEY
@@ -85,10 +83,8 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV VITE_SUPABASE_BASE_URL=$VITE_SUPABASE_BASE_URL
 ENV NODE_ENV=production
 
-# Build the Vite application
 RUN yarn build
 
-# Nginx server to serve static files
 FROM nginx:stable-alpine AS runner
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
